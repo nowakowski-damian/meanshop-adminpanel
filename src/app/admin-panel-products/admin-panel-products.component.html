@@ -1,0 +1,172 @@
+<div class="container-fluid">
+
+  <div class="row mt-5">
+
+    <!--PRODUCT LIST-->
+    <div class="col-12 col-lg-6">
+      <h4 class="text-center">Produkty</h4>
+      <button (click)="onNewProduct()" class="btn btn-light float-right mb-2">Dodaj nowy</button>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Produkt</th>
+          <th scope="col">Kategoria</th>
+          <th scope="col">Ilość</th>
+          <th scope="col">Cena</th>
+          <th scope="col">Edytuj</th>
+          <th scope="col">Promocja</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let product of products">
+          <td>{{product.name}}</td>
+          <td>{{product.category.name}}</td>
+          <td>{{product.quantity}}</td>
+          <td>{{product.price | number:'1.2'}} zł</td>
+
+          <td class="btn btn-light btn-block mb-0 pb-0" (click)="onProductDetails(product)">
+            <i *ngIf="currentProduct===product" class="material-icons">&#xE22B;</i>
+            <i *ngIf="currentProduct!==product" class="material-icons">&#xE254;</i>
+          </td>
+
+          <td class="text-center" (click)="onProductPromotion(product)">
+            <i class="material-icons">&#xE263;</i>
+          </td>
+
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--END PRODUCT LIST-->
+
+
+    <!--DETAILS-->
+    <div class="col-12 col-lg-6">
+      <div class="row mb-4">
+        <h4 *ngIf="!currentProduct && !currentPromotion"class="m-auto text-center">Brak wyboru</h4>
+        <h4 *ngIf="currentProduct" class="m-auto text-center">Edycja "{{currentProduct.name}}"</h4>
+        <h4 *ngIf="currentPromotion" class="m-auto text-center">Promocja dla "{{currentPromotion.product.name}}"</h4>
+      </div>
+
+      <div *ngIf="!currentProduct && isSavedSuccess" class="mt-5 col-12">
+        <div class="card text-white text-center bg-success" style="margin: auto; width: 20rem;">
+          <img class="card-img-top bg-white img-responsive" src="assets/img/success.png">
+          <div class="card-body">
+            <p class="card-text"> Dane zapisane pomyślnie!</p>
+          </div>
+        </div>
+      </div>
+
+      <form *ngIf="currentProduct" class="container">
+        <div class="row mb-2">
+          <div class="col-8">
+            <label for="name">Nazwa produktu</label>
+            <input [(ngModel)]="currentProduct.name" type="text" class="form-control" id="name" name="name" placeholder="np. Adidas Prolite" required>
+            <div class="invalid-feedback">
+              Wprowadź prawidłową nazwę produktu.
+            </div>
+          </div>
+          <div class="col-4">
+            <label for="price">Ilość</label>
+            <input [(ngModel)]="currentProduct.quantity" type="number" class="form-control" id="quantity" name="quantity" placeholder="np. 30" required>
+            <div class="invalid-feedback">
+              Wprowadź prawidłową ilość.
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <!--<div class="col-8">-->
+            <!--<label for="categorySelect">Kategoria</label>-->
+            <!--<select (change)="onCurentProductCategoryChange($event.target.value)" class="form-control mb-2 mr-sm-2 mb-sm-0" _id="categorySelect" name="categorySelect">-->
+              <!--<option *ngFor="let category of categories" [value]="category._id">{{category.name}}</option>-->
+            <!--</select>-->
+          <!--</div>-->
+          <div class="col-8">
+            <label for="categorySelect">Kategoria</label>
+            <input [(ngModel)]="currentProduct.category.name" type="text" class="form-control" id="categorySelect" name="categorySelect" placeholder="np. Obuwie" required>
+            <div class="invalid-feedback">
+              Wprowadź prawidłową kategorię.
+            </div>
+          </div>
+          <div class="col-4">
+            <label for="price">Cena</label>
+            <input [(ngModel)]="currentProduct.price" type="number" class="form-control" id="price" name="price" placeholder="np. 2.99" required>
+            <div class="invalid-feedback">
+              Wprowadź prawidłową cenę.
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-12">
+            <label for="description">Zdjęcie (URL)</label>
+            <input [(ngModel)]="currentProduct.img" type="text" class="form-control" id="imgUrl" name="imgUrl" placeholder="np. http://www.images.com/img1" required>
+            <div class="invalid-feedback">
+              Wprowadź prawidłowy adres URL.
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-12">
+            <label for="description">Krótki opis</label>
+            <input [(ngModel)]="currentProduct.description" type="text" class="form-control" id="description" name="description" placeholder="np. Flagowe buty firmy Adidas" required>
+            <div class="invalid-feedback">
+              Wprowadź prawidłowy krótki opis.
+            </div>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-12">
+            <label for="description">Długi opis</label>
+            <input [(ngModel)]="currentProduct.longDescription" type="text" class="form-control" id="longDescription" name="longDescription" placeholder="np. Flagowe buty firmy Adidas" required>
+            <div class="invalid-feedback">
+              Wprowadź prawidłowy długi opis.
+            </div>
+          </div>
+        </div>
+        <button (click)="onSaveProductButton()" class="btn btn-primary btn-block">Zapisz zmiany</button>
+      </form>
+
+      <form *ngIf="currentPromotion" class="container">
+        <div class="row">
+
+        <div class="col-6 mb-4">
+          <label for="price">Procent obniżki [%]</label>
+          <input [(ngModel)]="currentPromotion.discountPerentage" type="number" class="form-control" id="discountPerentage" name="discountPerentage" placeholder="np. 30" required>
+          <div class="invalid-feedback">
+            Wprowadź prawidłową wartość.
+          </div>
+        </div>
+
+        <div class="col-6 mb-4">
+          <label for="price">Długość [min]</label>
+          <input [(ngModel)]="currentPromotion.durationMin" type="number" class="form-control" id="durationMin" name="durationMin" placeholder="np. 30" required>
+          <div class="invalid-feedback">
+            Wprowadź prawidłową wartość.
+          </div>
+        </div>
+
+          <div class="col-6 mb-4">
+            <label for="price">Cena normalna [zł]</label>
+            <input  type="number" class="form-control" id="standardPrice" name="standardPrice" [value]="currentPromotion.product.price" disabled>
+          </div>
+
+          <div class="col-6 mb-4">
+            <label for="price">Cena promocyjna [zł]</label>
+            <input type="number" class="form-control" id="promoPrice" name="promoPrice" [value]="(currentPromotion.product.price*(1-currentPromotion.discountPerentage/100)).toPrecision(2)" disabled>
+          </div>
+
+        </div>
+
+        <button (click)="onSavePromotionButton()" class="btn btn-primary btn-block">Zapisz zmiany</button>
+      </form>
+
+    </div>
+    <!--END DETAILS-->
+
+
+  </div>
+
+
+</div>

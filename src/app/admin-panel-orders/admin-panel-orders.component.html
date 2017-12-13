@@ -1,0 +1,70 @@
+<div class="container-fluid">
+
+  <div class="row mt-5">
+
+    <div class="col-12 col-lg-6">
+      <h4 class="text-center mb-4">Lista zamówień</h4>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Imię i nazwisko</th>
+          <th scope="col">Wartość zamówienia</th>
+          <th scope="col">Szczegóły</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let order of orders" [class.text-success]="order.done" [class.text-danger]="!order.done" >
+          <td>{{order.names}}</td>
+          <td>{{order.totalAmount | number:'1.2'}} zł</td>
+          <td class="btn btn-light btn-block mb-0 pb-0" (click)="onOrderDetails(order)">
+            <i *ngIf="currentOrder===order" class="material-icons">&#xE8F5;</i>
+            <i *ngIf="currentOrder!==order" class="material-icons">&#xE8F4;</i>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="row mb-4">
+        <h4 class="m-auto text-center">Szczegóły</h4>
+      </div>
+
+
+      <button *ngIf="currentOrder && !currentOrder.done" class="btn btn-success btn-block mb-2" (click)="onOrderDone(currentOrder)">Oznacz jako zrealizowane</button>
+
+      <table *ngIf="currentOrder" class="table">
+        <thead>
+        <tr>
+          <th scope="col">Ilość</th>
+          <th scope="col">Produkt</th>
+          <th scope="col">Cena</th>
+          <th scope="col">Wartość</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr *ngFor="let product of currentOrder.products">
+          <td>{{product.quantity}}</td>
+          <td>{{product.product.name}}</td>
+          <td>{{product.product.price | number:'1.2'}} zł</td>
+          <td>{{product.quantity*product.product.price | number:'1.2'}} zł</td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td></td>
+          <th scope="col">Wartość całkowita:</th>
+          <th scope="col">{{currentOrder.totalAmount | number:'1.2'}} zł</th>
+          <td></td>
+        </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+
+</div>

@@ -1,0 +1,22 @@
+<nav *ngIf="isUserLogged()" class="navbar navbar-light navbar-expand bg-light">
+
+  <a routerLink="panel" class="navbar-brand">Panel administratora</a>
+
+  <div class="navbar-nav mr-auto">
+    <a routerLink="panel/orders" [routerLinkActive]="['active']" class="nav-item nav-link">Zamówienia</a>
+    <a routerLink="panel/products" [routerLinkActive]="['active']" class="nav-item nav-link">Produkty</a>
+  </div>
+
+  <span class="navbar-text">
+      <button (click)="onLogoutButton()" type="button" class="ml-4 btn btn-primary">Wyloguj</button>
+    </span>
+
+</nav>
+
+<router-outlet></router-outlet>
+
+
+
+
+
+
